@@ -1,7 +1,7 @@
 require 'dotenv'
 require 'http'
 
-# Dotenv.load if ENV['APP_ENV'] == 'sdfsdf'
+Dotenv.load if ENV['APP_ENV'] == 'development'
 
 class BC
   attr_reader :user, :password, :app, :account_id
