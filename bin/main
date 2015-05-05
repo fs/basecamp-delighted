@@ -1,11 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'dotenv'
-require 'app/bc'
-require 'app/dl'
+require './app/bc'
+require './app/dl'
 
-Dotenv.load
-
-client_emails = BC.new.client_emails
-
-DL.new.add_peoples(client_emails)
+DL.new.add_peoples( BC.new.client_emails )
