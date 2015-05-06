@@ -5,8 +5,6 @@ if ENV['APP_ENV'] == 'development'
   Dotenv.load
 end
 
-Dotenv.load if ENV['APP_ENV'] == 'development'
-
 Delighted.api_key = ENV['DELIGHTED_API_KEY']
 
 class DL

@@ -16,28 +16,36 @@ class BC
   end
 
   def client_emails
-    [].tap do |emails|
-      active_projects_ids.each do |project_id|
-        response = HTTP
-          .basic_auth(user: user, pass: password)
-          .headers(accept: 'application/json')
-          .headers('User-Agent' => app)
-          .get("https://basecamp.com/#{account_id}/api/v1/projects/#{project_id}/accesses")
-
-        emails << JSON.parse(response).map { |elem| elem['email_address'] if elem['is_client'] == true }
-      end
-    end.flatten.compact.uniq
+    client_emails_dirty.flatten.compact.uniq
   end
 
   private
 
   def active_projects_ids
-    response = HTTP
+    JSON.parse(projects_response).map { |elem| elem['id'] }
+  end
+
+  def projects_response
+    HTTP
       .basic_auth(user: user, pass: password)
       .headers(accept: 'application/json')
       .headers('User-Agent' => app)
       .get("https://basecamp.com/#{account_id}/api/v1/projects")
+  end
 
-    JSON.parse(response).map { |elem| elem['id'] }
+  def accesses_response(project_id)
+    HTTP
+      .basic_auth(user: user, pass: password)
+      .headers(accept: 'application/json')
+      .headers('User-Agent' => app)
+      .get("https://basecamp.com/#{account_id}/api/v1/projects/#{project_id}/accesses")
+  end
+
+  def client_emails_dirty
+    [].tap do |emails|
+      active_projects_ids.each do |project_id|
+        emails << JSON.parse(accesses_response(project_id)).map { |elem| elem['email_address'] if elem['is_client'] == true }
+      end
+    end
   end
 end
