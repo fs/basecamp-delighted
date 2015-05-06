@@ -26,19 +26,11 @@ class BC
   end
 
   def projects_response
-    HTTP
-      .basic_auth(user: user, pass: password)
-      .headers(accept: 'application/json')
-      .headers('User-Agent' => app)
-      .get("https://basecamp.com/#{account_id}/api/v1/projects")
+    http_get("https://basecamp.com/#{account_id}/api/v1/projects")
   end
 
   def accesses_response(project_id)
-    HTTP
-      .basic_auth(user: user, pass: password)
-      .headers(accept: 'application/json')
-      .headers('User-Agent' => app)
-      .get("https://basecamp.com/#{account_id}/api/v1/projects/#{project_id}/accesses")
+    http_get("https://basecamp.com/#{account_id}/api/v1/projects/#{project_id}/accesses")
   end
 
   def client_emails_dirty
@@ -47,5 +39,12 @@ class BC
         emails << JSON.parse(accesses_response(project_id)).map { |elem| elem['email_address'] if elem['is_client'] == true }
       end
     end
+  end
+
+  def http_get(url)
+    HTTP
+      .basic_auth(user: user, pass: password)
+      .headers(accept: 'application/json', 'User-Agent' => app)
+      .get(url)
   end
 end
