@@ -1,7 +1,9 @@
-require 'dotenv'
 require 'http'
 
-Dotenv.load if ENV['APP_ENV'] == 'development'
+if ENV['APP_ENV'] == 'development'
+  require 'dotenv'
+  Dotenv.load
+end
 
 class BC
   attr_reader :user, :password, :app, :account_id

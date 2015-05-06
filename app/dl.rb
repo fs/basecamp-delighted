@@ -1,5 +1,9 @@
-require 'dotenv'
 require 'delighted'
+
+if ENV['APP_ENV'] == 'development'
+  require 'dotenv'
+  Dotenv.load
+end
 
 Dotenv.load if ENV['APP_ENV'] == 'development'
 
